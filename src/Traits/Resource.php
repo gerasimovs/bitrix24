@@ -8,24 +8,16 @@ use GerasimovS\Bitrix24\Rest;
 trait Resource
 {
     /**
-     * @param array $order
-     * @param array $filter
-     * @param array $select
-     * @param int $start
+     * @param array $fields
      * @return array
      * @throws Exception
      */
-    public function getList($order = array(), $filter = array(), $select = array(), $start = 0)
+    public function list($fields = [])
     {
         $method = sprintf('%s.list', $this->methodGroup);
         $result = Rest::getInstance()->request(
             $method,
-            [
-                'order'  => $order,
-                'filter' => $filter,
-                'select' => $select,
-                'start'  => $start
-            ]
+            $fields
         );
 
         return $result;
@@ -50,19 +42,19 @@ trait Resource
      * @return array
      * @throws Exception
      */
-    public function add($fields = [])
+    public function add($fields)
     {
         $method = sprintf('%s.add', $this->methodGroup);
         $result = Rest::getInstance()->request(
             $method,
-            ['fields' => $fields]
+            compact('fields')
         );
 
         return $result;
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @return array
      * @throws Exception
      */
@@ -71,15 +63,15 @@ trait Resource
         $method = sprintf('%s.get', $this->methodGroup);
         $result = Rest::getInstance()->request(
             $method,
-            ['id' => $id]
+            compact('id')
         );
 
         return $result;
     }
 
     /**
-     * @param $id
-     * @param $fields
+     * @param int $id
+     * @param array $fields
      * @return array
      * @throws Exception
      */
@@ -88,17 +80,14 @@ trait Resource
         $method = sprintf('%s.update', $this->methodGroup);
         $result = Rest::getInstance()->request(
             $method,
-            [
-                'id' => $id,
-                'fields' => $fields
-            ]
+            compact('id', 'fields')
         );
 
         return $result;
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @return array
      * @throws Exception
      */
@@ -107,7 +96,7 @@ trait Resource
         $method = sprintf('%s.delete', $this->methodGroup);
         $result = Rest::getInstance()->request(
             $method,
-            ['id' => $id]
+            compact('id')
         );
 
         return $result;

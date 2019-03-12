@@ -70,7 +70,7 @@ class Rest
     /**
      * @throws Exception
      */
-    protected function __construct()
+    public function __construct()
     {
         if (extension_loaded('curl') == false) {
             $errorMsg = 'You must have the cURL extension enabled to use this library';
@@ -137,7 +137,7 @@ class Rest
             throw new Exception($request['error_description']);
         }
 
-        return $request['result'];
+        return $request;
     }
 
     /**
@@ -179,7 +179,7 @@ class Rest
         $curlResult = curl_exec($curl);
 
         if ($curlResult === false) {
-            throw new Exception($curl);
+            throw new Exception(curl_error($curl));
         }
 
         $curlInfo = curl_getinfo($curl);

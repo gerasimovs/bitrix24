@@ -4,9 +4,9 @@ namespace GerasimovS\Bitrix24\Entities\Calendars;
 
 use GerasimovS\Bitrix24\Rest;
 
-class Event
+class Section
 {
-    public $methodGroup = 'calendar.event';
+    public $methodGroup = 'calendar.section';
 
     public function get($fields)
     {

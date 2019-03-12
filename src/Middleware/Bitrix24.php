@@ -7,8 +7,9 @@ use Closure;
 class Bitrix24
 {
     protected $parameters = [
-        'auth' => Authenticate::class,
         'verify' => VerificationToken::class,
+        'remember' => RememberToken::class,
+        'auth' => Authenticate::class,
         'webhook' => CheckConfig::class,
     ];
 
