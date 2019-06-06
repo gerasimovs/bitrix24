@@ -27,7 +27,7 @@ class WebHook
     {
         static $entity;
 
-        if (empty($entity)) {
+        if (!($entity instanceof Entity)) {
             $entity = new Entity;
         }
 
