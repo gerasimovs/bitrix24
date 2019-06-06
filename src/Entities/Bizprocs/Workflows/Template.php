@@ -1,6 +1,6 @@
 <?php
 
-namespace GerasimovS\Bitrix24\Entities\Crms\Bizprocs\Workflows;
+namespace GerasimovS\Bitrix24\Entities\Bizprocs\Workflows;
 
 use GerasimovS\Bitrix24\Entity;
 use GerasimovS\Bitrix24\Traits\Resource;
