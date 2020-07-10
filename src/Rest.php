@@ -2,12 +2,8 @@
 
 namespace GerasimovS\Bitrix24;
 
-use Exception;
-use Illuminate\Session\Store;
-
 /**
  * Class Rest Класс для работы с методами REST в Bitrix24
- * @package GerasimovS\Rest
  */
 class Rest
 {
@@ -68,13 +64,13 @@ class Rest
 
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function __construct()
     {
         if (extension_loaded('curl') == false) {
             $errorMsg = 'You must have the cURL extension enabled to use this library';
-            throw new Exception($errorMsg);
+            throw new \Exception($errorMsg);
         }
 
         self::$instance = $this;
@@ -97,10 +93,10 @@ class Rest
      *
      * @param string $methodName
      * @param array $parameters
-     * @throws Exception
+     * @throws \Exception
      * @return array
      */
-    public function request($methodName, array $parameters = array())
+    public function request($methodName, array $parameters = [])
     {
         if ($this->firstRequest) {
             //$this->refreshToken();
@@ -109,12 +105,12 @@ class Rest
 
         if (null == $this->getAccessToken()) {
             $errorMsg = 'Access token is not found, you must set the access token using the setAccessToken method';
-            throw new Exception($errorMsg);
+            throw new \Exception($errorMsg);
         }
 
         if ($methodName == '') {
             $errorMsg = 'Method name not found';
-            throw new Exception($errorMsg);
+            throw new \Exception($errorMsg);
         }
 
         $url = sprintf('https://%s/rest/', $this->getDomain());
@@ -129,12 +125,12 @@ class Rest
 
         try {
             $request = $this->execute($url, $parameters);
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             throw $exception;
         }
 
         if (!isset($request['result'])) {
-            throw new Exception($request['error_description']);
+            throw new \Exception($request['error_description']);
         }
 
         return $request;
@@ -144,7 +140,7 @@ class Rest
      * Выполнить HTTPS-запрос к порталу Bitrix24 с использованием cURL
      *
      * @param $url
-     * @throws Exception
+     * @throws \Exception
      * @param $parameters
      * @return array
      */
@@ -157,29 +153,29 @@ class Rest
             sleep(1);
         }
 
-        $curlOptions = array(
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CONNECTTIMEOUT => 65,
-            CURLOPT_TIMEOUT => 70,
-            CURLOPT_POST => true,
-            CURLOPT_HEADER => false,
-            CURLOPT_POSTFIELDS => http_build_query($parameters),
-            CURLOPT_URL => $url
-        );
+        $curlOptions = [
+            \CURLOPT_FOLLOWLOCATION => true,
+            \CURLOPT_RETURNTRANSFER => true,
+            \CURLOPT_CONNECTTIMEOUT => 65,
+            \CURLOPT_TIMEOUT => 70,
+            \CURLOPT_POST => true,
+            \CURLOPT_HEADER => false,
+            \CURLOPT_POSTFIELDS => http_build_query($parameters),
+            \CURLOPT_URL => $url
+        ];
 
         if ($this->sslVerify == false) {
-            $curlOptions[CURLOPT_SSL_VERIFYPEER] = false;
-            $curlOptions[CURLOPT_SSL_VERIFYHOST] = false;
+            $curlOptions[\CURLOPT_SSL_VERIFYPEER] = false;
+            $curlOptions[\CURLOPT_SSL_VERIFYHOST] = false;
         }
 
-        $curl = curl_init();
+        $curl = \curl_init();
         curl_setopt_array($curl, $curlOptions);
 
         $curlResult = curl_exec($curl);
 
         if ($curlResult === false) {
-            throw new Exception(curl_error($curl));
+            throw new \Exception(curl_error($curl));
         }
 
         $curlInfo = curl_getinfo($curl);
@@ -188,18 +184,18 @@ class Rest
         switch ($curlInfo['http_code']) {
             case 403:
                 $errorMsg = 'Доступ к порталу запрещен';
-                throw new Exception($errorMsg);
+                throw new \Exception($errorMsg);
                 break;
 
             case 502:
                 $errorMsg = 'Проблема с доступом к порталу';
-                throw new Exception($errorMsg);
+                throw new \Exception($errorMsg);
                 break;
         }
 
         if ($curlResult === '') {
             $errorMsg = 'Пустой ответ с портала';
-            throw new Exception($errorMsg);
+            throw new \Exception($errorMsg);
         }
 
         $jsonResult = json_decode($curlResult, true);
@@ -208,7 +204,7 @@ class Rest
         $jsonErrorCode = json_last_error();
         if ($jsonResult === null && ($jsonErrorCode !== JSON_ERROR_NONE)) {
             $errorMsg = sprintf('Ошибка при выполнении функции json_decode (код: %s)', $jsonErrorCode);
-            throw new Exception($errorMsg);
+            throw new \Exception($errorMsg);
         }
 
         return $jsonResult;
@@ -223,12 +219,12 @@ class Rest
     {
         $this->getRefreshToken();
         $url = 'https://oauth.bitrix.info/oauth/token/';
-        $postFields = http_build_query(array(
+        $postFields = http_build_query([
             'grant_type' => 'refresh_token',
             'client_id' => $this->getClientId(),
             'client_secret' => $this->getClientSecret(),
             'refresh_token' => $this->getRefreshToken(),
-        ));
+        ]);
 
         $result = json_decode(file_get_contents($url . '?' . $postFields), 1);
 
@@ -240,18 +236,18 @@ class Rest
      * Установить входящий вебхук
      *
      * @param string $url
-     * @throws Exception
+     * @throws \Exception
      */
     public function setAccessHook($url)
     {
         if (filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED) == false) {
-            throw new Exception('Вебхук не является допустимым URL-адресом');
+            throw new \Exception('Вебхук не является допустимым URL-адресом');
         }
 
         $parseUrl = parse_url($url);
 
         if (!preg_match('#^/rest/(\d+/[^/]*)#', $parseUrl['path'], $matches)) {
-            throw new Exception('Некорректный токен доступа');
+            throw new \Exception('Некорректный токен доступа');
         }
 
         $accessToken = $matches[1];

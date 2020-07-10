@@ -16,21 +16,20 @@ class Lists
      * @param string $type
      * @param array $order
      * @param int|null $group
+     *
      * @return array
      * @throws \Exception
      */
-    public function get($id, $type = 'lists', $order = array(), $group = null)
+    public function get($id, $type = 'lists', $order = [], $group = null)
     {
         $method = sprintf('%s.get', $this->methodGroup);
-        return Rest::getInstance()->request(
-            $method,
-            array(
-                'iblock_type_id' => $type,
-                'socnet_group_id' => $group,
-                'iblock_order' => $order,
-                self::getIdKey($id) => $id,
-            )
-        );
+
+        return Rest::getInstance()->request($method, [
+            'iblock_type_id' => $type,
+            'socnet_group_id' => $group,
+            'iblock_order' => $order,
+            self::getIdKey($id) => $id,
+        ]);
     }
 
     public static function getIdKey($id)

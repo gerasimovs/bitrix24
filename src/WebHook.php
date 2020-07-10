@@ -2,17 +2,19 @@
 
 namespace GerasimovS\Bitrix24;
 
-use Exception;
-use ReflectionClass;
+use GerasimovS\Bitrix24\Entities\Crm;
 
 /**
  * Class WebHook Класс для работы с методами REST в Bitrix24 с использованием веб-хука
- * @package GerasimovS\Rest
+ *
+ * @property Crm $crm
  */
 class WebHook
 {
     /**
-     * @throws Exception
+     * @param Rest $rest
+     *
+     * @throws \Exception
      */
     public function __construct(Rest $rest)
     {
@@ -20,7 +22,8 @@ class WebHook
     }
 
     /**
-     * @param $method
+     * @param string $method
+     *
      * @return mixed
      */
     public function __get($method)

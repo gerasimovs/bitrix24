@@ -2,7 +2,6 @@
 
 namespace GerasimovS\Bitrix24\Entities\Lists;
 
-use Exception;
 use GerasimovS\Bitrix24\Entities\Lists;
 use GerasimovS\Bitrix24\Rest;
 
@@ -14,9 +13,9 @@ class Element
      * @param array $order
      * @param array $filter
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
-    public function getList($filter = array(), $order = array(), $start = 0)
+    public function getList($filter = [], $order = [], $start = 0)
     {
         if (isset($filter['iblock_id'])) {
             $listId = $filter['iblock_id'];
@@ -25,7 +24,7 @@ class Element
             $listId = $filter['iblock_type'];
             unset($filter['iblock_type']);
         } else {
-            throw new Exception('Required parameters are missing');
+            throw new \Exception('Required parameters are missing');
         }
 
         if (isset($filter['element_id'])) {
@@ -53,23 +52,22 @@ class Element
      * @param array $filter
      * @param string $listType
      * @param array $order
+     *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
-    private function get($listId, $elementId = null, $filter = array(), $listType = 'lists', $order = array(), $start = 0)
+    private function get($listId, $elementId = null, $filter = [], $listType = 'lists', $order = [], $start = 0)
     {
         $method = sprintf('%s.get', $this->methodGroup);
-        return Rest::getInstance()->request(
-            $method,
-            array(
-                'iblock_type_id' => $listType,
-                'element_order' => $order,
-                'filter' => $filter,
-                Lists::getIdKey($listId) => $listId,
-                self::getIdKey($elementId) => $elementId,
-                'start' => $start,
-            )
-        );
+
+        return Rest::getInstance()->request($method, [
+            'iblock_type_id' => $listType,
+            'element_order' => $order,
+            'filter' => $filter,
+            Lists::getIdKey($listId) => $listId,
+            self::getIdKey($elementId) => $elementId,
+            'start' => $start,
+        ]);
     }
 
     public function add($fields)
@@ -81,14 +79,14 @@ class Element
             $listId = $fields['iblock_type'];
             unset($fields['iblock_type']);
         } else {
-            throw new Exception('Required parameters are missing');
+            throw new \Exception('Required parameters are missing');
         }
 
         if (isset($fields['element_code'])) {
             $elementCode = $fields['element_code'];
             unset($fields['element_code']);
         } else {
-            throw new Exception('Required parameters are missing');
+            throw new \Exception('Required parameters are missing');
         }
 
         if (isset($filter['iblock_type_id'])) {
@@ -98,15 +96,13 @@ class Element
         }
 
         $method = sprintf('%s.add', $this->methodGroup);
-        return Rest::getInstance()->request(
-            $method,
-            array(
-                'iblock_type_id' => $listType,
-                Lists::getIdKey($listId) => $listId,
-                'element_code' => $elementCode,
-                'fields' => $fields,
-            )
-        );
+
+        return Rest::getInstance()->request($method, [
+            'iblock_type_id' => $listType,
+            Lists::getIdKey($listId) => $listId,
+            'element_code' => $elementCode,
+            'fields' => $fields,
+        ]);
     }
 
     /**

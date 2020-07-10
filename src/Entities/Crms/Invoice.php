@@ -5,9 +5,15 @@ namespace GerasimovS\Bitrix24\Entities\Crms;
 use GerasimovS\Bitrix24\Traits\Getting;
 use GerasimovS\Bitrix24\Traits\Resource;
 
+/**
+ * Class Invoice
+ *
+ * @link https://dev.1c-bitrix.ru/rest_help/crm/invoice/index.php
+ */
 class Invoice
 {
-    public $methodGroup = 'crm.invoice';
     use Getting;
     use Resource;
+
+    public $methodGroup = 'crm.invoice';
 }

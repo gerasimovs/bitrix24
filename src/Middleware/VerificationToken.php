@@ -2,28 +2,35 @@
 
 namespace GerasimovS\Bitrix24\Middleware;
 
-use Closure;
-use Illuminate\Http\Request;
-
+/**
+ * Class VerificationToken
+ */
 class VerificationToken
 {
     /**
-     * @var Request $request
+     * @var \Illuminate\Http\Request $request
      */
     public $request;
 
     /**
+     * @var \Illuminate\Session\Store $session
+     */
+    public $session;
+
+    /**
      * Handle an incoming request.
      *
-     * @param Request $request
-     * @param Closure $next
-     * @return mixed
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure $next
+     * @return mixed|void
      */
-    public function handle(Request $request, Closure $next)
+    public function handle($request, \Closure $next)
     {
         $this->request = $request;
+        $this->session = $request->session();
 
         if ($this->checkTokens()) {
+            $this->putTokensToSession();
             return $next($request);
         }
 
@@ -31,25 +38,24 @@ class VerificationToken
     }
 
     /**
-     * Check request Bitrix24's tokens parameters.
+     * Check Bitrix24's tokens in request.
      *
      * @return boolean
      */
     public function checkTokens()
     {
-        if (
-            $this->request->has('DOMAIN')
+        return $this->request->has('DOMAIN')
             && $this->request->has('AUTH_ID')
-            && $this->request->has('REFRESH_ID')
-        ) {
-            $session = $this->request->session();
-            $session->put('bx24_domain', $this->request->DOMAIN);
-            $session->put('bx24_access_token', $this->request->AUTH_ID);
-            $session->put('bx24_refresh_token', $this->request->REFRESH_ID);
+            && $this->request->has('REFRESH_ID');
+    }
 
-            return true;
-        }
-
-        return false;
+    /**
+     * Put Bitrix24's tokens to session.
+     */
+    public function putTokensToSession()
+    {
+        $this->session->put('bx24_domain', $this->request->get('DOMAIN'));
+        $this->session->put('bx24_access_token', $this->request->get('AUTH_ID'));
+        $this->session->put('bx24_refresh_token', $this->request->get('REFRESH_ID'));
     }
 }

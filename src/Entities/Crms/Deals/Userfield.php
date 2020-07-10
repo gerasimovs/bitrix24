@@ -4,8 +4,14 @@ namespace GerasimovS\Bitrix24\Entities\Crms\Deals;
 
 use GerasimovS\Bitrix24\Traits\Resource;
 
+/**
+ * Class Userfield
+ *
+ * @see https://dev.1c-bitrix.ru/rest_help/crm/userfields/index.php
+ */
 class Userfield
 {
-    public $methodGroup = 'crm.deal.userfield';
     use Resource;
+
+    public $methodGroup = 'crm.deal.userfield';
 }

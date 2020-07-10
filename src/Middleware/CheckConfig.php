@@ -2,19 +2,23 @@
 
 namespace GerasimovS\Bitrix24\Middleware;
 
-use Closure;
 use GerasimovS\Bitrix24\Rest;
 
+/**
+ * Class CheckConfig
+ */
 class CheckConfig
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure $next
+     *
+     * @return mixed|void
+     * @throws \Exception
      */
-    public function handle($request, Closure $next)
+    public function handle($request, \Closure $next)
     {
         if ($this->checkTokens()) {
             $this->createRestInstance();
@@ -27,7 +31,7 @@ class CheckConfig
     /**
      * Check Bitrix24's tokens in session.
      *
-     * @return boolean
+     * @return boolean|void
      */
     public function checkTokens()
     {
@@ -36,9 +40,15 @@ class CheckConfig
         }
     }
 
+    /**
+     * @return Rest
+     * @throws \Exception
+     */
     public function createRestInstance()
     {
         $rest = Rest::getInstance();
         $rest->setAccessHook(config('bitrix24.webhook'));
+
+        return $rest;
     }
 }

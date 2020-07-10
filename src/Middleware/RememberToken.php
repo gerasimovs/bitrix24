@@ -6,25 +6,29 @@ use Closure;
 use Illuminate\Http\Request;
 use GerasimovS\Bitrix24\Rest;
 
+/**
+ * Class RememberToken
+ */
 class RememberToken
 {
     /**
-     * @var $session
+     * @var \Illuminate\Session\Store $session
      */
     public $session;
 
     /**
      * Handle an incoming request.
      *
-     * @param Request $request
-     * @param Closure $next
-     * @return mixed
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure $next
+     * @return mixed|void
      */
     public function handle(Request $request, Closure $next)
     {
         $this->session = $request->session();
 
-        if ($this->setTokens()) {
+        if ($this->checkTokens()) {
+            $this->createRestInstance();
             return $next($request);
         }
 
@@ -32,26 +36,29 @@ class RememberToken
     }
 
     /**
-     * Check request Bitrix24's tokens parameters.
+     * Check Bitrix24's tokens in session.
      *
      * @return boolean
      */
-    public function setTokens()
+    public function checkTokens()
     {
-        if (
-            $this->session->has('bx24_domain')
+        return $this->session->has('bx24_domain')
             && $this->session->has('bx24_access_token')
-            && $this->session->has('bx24_refresh_token')
-        ) {
-            $rest = Rest::getInstance();
-            $rest->setDomain($this->session->get('bx24_domain'));
-            $rest->setAccessToken($this->session->get('bx24_access_token'));
-            $rest->setRefreshToken($this->session->get('bx24_refresh_token'));
-            $rest->setClientId(config('bitrix24.client_id'));
-            $rest->setClientSecret(config('bitrix24.client_secret'));
-            return true;
-        }
+            && $this->session->has('bx24_refresh_token');
+    }
 
-        return false;
+    /**
+     * @return Rest
+     */
+    public function createRestInstance()
+    {
+        $rest = Rest::getInstance();
+        $rest->setDomain($this->session->get('bx24_domain'));
+        $rest->setAccessToken($this->session->get('bx24_access_token'));
+        $rest->setRefreshToken($this->session->get('bx24_refresh_token'));
+        $rest->setClientId(config('bitrix24.client_id'));
+        $rest->setClientSecret(config('bitrix24.client_secret'));
+
+        return $rest;
     }
 }

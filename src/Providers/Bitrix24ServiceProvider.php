@@ -2,8 +2,8 @@
 
 namespace GerasimovS\Bitrix24\Providers;
 
+use GerasimovS\Bitrix24\Middleware\Bitrix24;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Http\Request;
 
 class Bitrix24ServiceProvider extends ServiceProvider
 {
@@ -27,7 +27,8 @@ class Bitrix24ServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__ . '/../config/bitrix24.php', 'bitrix24'
+            __DIR__ . '/../config/bitrix24.php',
+            'bitrix24'
         );
     }
 
@@ -48,7 +49,7 @@ class Bitrix24ServiceProvider extends ServiceProvider
     {
         $this->app['router']->aliasMiddleware(
             'bitrix24',
-            \GerasimovS\Bitrix24\Middleware\Bitrix24::class
+            Bitrix24::class
         );
     }
 }

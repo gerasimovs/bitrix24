@@ -3,27 +3,45 @@
 namespace GerasimovS\Bitrix24\Entities\Crms\Deals;
 
 use GerasimovS\Bitrix24\Rest;
-use GerasimovS\Bitrix24\Traits\Resource;
 
+/**
+ * Class Productrows
+ */
 class Productrows
 {
     public $methodGroup = 'crm.deal.productrows';
 
-    public function get()
+    /**
+     * @link https://dev.1c-bitrix.ru/rest_help/crm/cdeals/crm_deal_productrows_get.php
+     * @param int $id
+     *
+     * @return array|null
+     * @throws \Exception
+     */
+    public function get($id)
     {
     	$method = sprintf('%s.get', $this->methodGroup);
-    	return Rest::getInstance()->request(
-    		$method,
-    		compact('id')
-    	);
+
+    	return Rest::getInstance()->request($method, [
+    		'id' => $id,
+    	]);
     }
 
+    /**
+     * @link https://dev.1c-bitrix.ru/rest_help/crm/cdeals/crm_deal_productrows_set.php
+     * @param $id
+     * @param $rows
+     *
+     * @return array|null
+     * @throws \Exception
+     */
     public function set($id, $rows)
     {
     	$method = sprintf('%s.set', $this->methodGroup);
-    	return Rest::getInstance()->request(
-    		$method,
-    		compact('id', 'rows')
-    	);
+
+    	return Rest::getInstance()->request($method, [
+    		'id' => $id,
+            'rows' => $rows,
+    	]);
     }
 }

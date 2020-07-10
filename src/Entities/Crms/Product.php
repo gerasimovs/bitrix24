@@ -2,11 +2,16 @@
 
 namespace GerasimovS\Bitrix24\Entities\Crms;
 
-use GerasimovS\Bitrix24\Traits\Getting;
 use GerasimovS\Bitrix24\Traits\Resource;
 
+/**
+ * Class Product
+ *
+ * @link https://dev.1c-bitrix.ru/rest_help/crm/products/index.php
+ */
 class Product
 {
-    public $methodGroup = 'crm.product';
     use Resource;
+
+    public $methodGroup = 'crm.product';
 }

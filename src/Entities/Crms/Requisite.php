@@ -4,8 +4,14 @@ namespace GerasimovS\Bitrix24\Entities\Crms;
 
 use GerasimovS\Bitrix24\Traits\Resource;
 
+/**
+ * Class Requisite
+ *
+ * @link https://dev.1c-bitrix.ru/rest_help/crm/requisite/index.php
+ */
 class Requisite
 {
-    public $methodGroup = 'crm.requisite';
     use Resource;
+
+    public $methodGroup = 'crm.requisite';
 }

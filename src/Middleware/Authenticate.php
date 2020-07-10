@@ -2,9 +2,11 @@
 
 namespace GerasimovS\Bitrix24\Middleware;
 
-use Closure;
 use GerasimovS\Bitrix24\Rest;
 
+/**
+ * Class Authenticate
+ */
 class Authenticate
 {
     /**
@@ -17,9 +19,10 @@ class Authenticate
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
-     * @return mixed
+     *
+     * @return mixed|void
      */
-    public function handle($request, Closure $next)
+    public function handle($request, \Closure $next)
     {
         $this->session = $request->session();
 
@@ -38,15 +41,14 @@ class Authenticate
      */
     public function checkTokens()
     {
-        if (
-            $this->session->has('bx24_domain')
+        return $this->session->has('bx24_domain')
             && $this->session->has('bx24_access_token')
-            && $this->session->has('bx24_refresh_token')
-        ) {
-            return true;
-        }
+            && $this->session->has('bx24_refresh_token');
     }
 
+    /**
+     * @return Rest
+     */
     public function createRestInstance()
     {
         $rest = Rest::getInstance();
@@ -55,5 +57,7 @@ class Authenticate
         $rest->setRefreshToken($this->session->get('bx24_refresh_token'));
         $rest->setClientId(config('bitrix24.client_id'));
         $rest->setClientSecret(config('bitrix24.client_secret'));
+
+        return $rest;
     }
 }

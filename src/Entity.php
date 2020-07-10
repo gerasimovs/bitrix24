@@ -6,7 +6,6 @@ use GerasimovS\Bitrix24\Traits\Getting;
 
 /**
  * Class Entity
- * @package GerasimovS\Bitrix24
  */
 class Entity
 {
