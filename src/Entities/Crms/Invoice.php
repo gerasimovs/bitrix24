@@ -9,6 +9,7 @@ use GerasimovS\Bitrix24\Traits\Resource;
  * Class Invoice
  *
  * @link https://dev.1c-bitrix.ru/rest_help/crm/invoice/index.php
+ * @property Invoices\Userfield $userfield
  */
 class Invoice
 {
