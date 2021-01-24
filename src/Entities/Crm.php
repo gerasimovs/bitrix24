@@ -15,6 +15,7 @@ use GerasimovS\Bitrix24\Traits\Getting;
  * @property Crms\Invoice $invoice
  * @property Crms\Lead $lead
  * @property Crms\Product $product
+ * @property Crms\ProductSection $productSection
  * @property Crms\Requisite $requisite
  *
  * @link https://dev.1c-bitrix.ru/rest_help/crm/index.php
